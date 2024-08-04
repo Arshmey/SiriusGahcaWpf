@@ -1,0 +1,15 @@
+﻿<UserControl x:Name="personInfo" x:Class="SiriusGahca.UI_Elements.PersonInfo"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SiriusGahca.UI_Elements"
+             mc:Ignorable="d" 
+             Width="320" Height="128">
+    <Grid x:Name="blockInfo">
+        <Image x:Name="imagePerson" HorizontalAlignment="Left" Height="128" Margin="0,0,0,0" VerticalAlignment="Top" Width="128"/>
+        <Label x:Name="namePerson" Content="Random Name" HorizontalAlignment="Left" Margin="133,14,0,0" VerticalAlignment="Top" Width="180" Height="32" FontSize="16" FontFamily="Arial" FontStyle="Italic" FontWeight="Bold" Foreground="#FFDCE80D"/>
+        <Label x:Name="ratePerson" Content="Rate: xAss" HorizontalAlignment="Left" Margin="133,0,0,0" VerticalAlignment="Center" Width="180" Foreground="#FFDCE80D" FontStyle="Italic" FontWeight="Bold" FontFamily="Arial" FontSize="16"/>
+
+    </Grid>
+</UserControl>

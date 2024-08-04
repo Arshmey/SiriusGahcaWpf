@@ -1,0 +1,17 @@
+﻿<UserControl x:Name="slideBar" x:Class="SiriusGahca.UI_Elements.SideBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SiriusGahca.UI_Elements"
+             mc:Ignorable="d" 
+             Width="378" Height="333">
+    <Grid x:Name="slideBarGrid">
+        <ScrollBar x:Name="scrollBar" Margin="362,0,0,0" PreviewMouseWheel="ScrollWheel" ValueChanged="ChangeValue"/>
+        <Grid x:Name="container" PreviewMouseWheel="ScrollWheel" VerticalAlignment="Top" Height="333" Width="362" Margin="0,0,16,0">
+            <Grid.Background>
+                <SolidColorBrush Color="#FFB94E4E" Opacity="0"/>
+            </Grid.Background>
+        </Grid>
+    </Grid>
+</UserControl>
