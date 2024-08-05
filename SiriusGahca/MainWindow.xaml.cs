@@ -19,6 +19,8 @@ namespace SiriusGahca
 		private PersonDeserializer personDeserializer;
 		private WindowMainMenu mainMenu;
 		private WindowCase windowCase;
+		private Random random;
+		private CancellationTokenSource cts;
 
 		public MainWindow()
 		{
@@ -43,45 +45,43 @@ namespace SiriusGahca
 		public async void YouSpinMe(object sender, Spin spin)
 		{
 			int numChange;
+			int spineCount = 0;
+			random = new Random();
+			cts = new CancellationTokenSource();
 			((Button)sender).IsEnabled = false;
-
 			await Task.Factory.StartNew(() =>
 			{
-				for (int time = 35; time > 0; time--)
+				while (!cts.IsCancellationRequested && spineCount < 35)
 				{
-					numChange = new Random().Next(1, 101);
+					numChange = random.Next(1, 101);
 					foreach (Person person in personDeserializer.Person)
 					{
 						if (numChange >= person.Min && numChange <= person.Max)
 						{
-							try
+							spin.Dispatcher.Invoke(() =>
 							{
-								spin.Dispatcher.Invoke(() =>
-								{
-									spin.ImagePerson = new BitmapImage(new Uri(Path.Combine(Directory.GetCurrentDirectory(), person.IconPerson),
-										UriKind.Absolute));
-									spin.NamePerson = $"Имя: {person.Name}";
-								});
-							}
-							catch { }
+								spin.ImagePerson = new BitmapImage(new Uri(Path.Combine(Directory.GetCurrentDirectory(), person.IconPerson),
+									UriKind.Absolute));
+								spin.NamePerson = $"Имя: {person.Name}";
+							});
 							break;
 						}
 					}
 					Thread.Sleep(100);
+					spineCount++;
 				}
-			});
-
+			}, cts.Token);
 			((Button)sender).IsEnabled = true;
 		}
 
 		private void ReloadGUI(object sender, SizeChangedEventArgs e)
 		{
-			mainSpace.Children.Clear();
-			windowCase.Create();
+			windowCase.ResetResolution();
 		}
 
 		public void CaseChooser(object sender, MouseButtonEventArgs e)
 		{
+			if(cts != null) { cts.Cancel(); }
 			mainSpace.Children.Clear();
 			window.SizeChanged -= ReloadGUI;
 			mainMenu.Create();
