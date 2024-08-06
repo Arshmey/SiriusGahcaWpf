@@ -117,6 +117,11 @@ namespace SiriusGahca.UI_Elements
 			container.Children.Add(element);
 		}
 
+		public void ClearSideBar()
+		{
+			container.Children.Clear();
+		}
+
 		private void ScrollWheel(object sender, MouseWheelEventArgs e)
 		{
 			scrollBar.Value -= e.Delta / 10;

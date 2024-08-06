@@ -6,6 +6,6 @@
         xmlns:local="clr-namespace:SiriusGahca"
         xmlns:UI_Elements="clr-namespace:SiriusGahca.UI_Elements" x:Name="window" x:Class="SiriusGahca.MainWindow"
         mc:Ignorable="d"
-        Title="SiriusRPG Gacha" Height="720" Width="1280" Loaded="Window_Loaded" FontSize="14">
+        Title="SiriusRPG Gacha" Height="720" Width="1280" Loaded="Window_Loaded" FontSize="14" SizeChanged="ReloadGUI">
     <Grid x:Name="mainSpace"/>
 </Window>

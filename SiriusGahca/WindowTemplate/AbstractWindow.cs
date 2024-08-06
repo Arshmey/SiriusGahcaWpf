@@ -1,13 +1,12 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
-using System.Xml;
 
-namespace SiriusGahca.Forms
+namespace SiriusGahca.WindowTemplate
 {
 	abstract class AbstractWindow
 	{
 
 		public abstract void Create();
+		public abstract void ReturnWindow();
 
 		private protected void SizeSet(FrameworkElement element, double width, double height)
 		{

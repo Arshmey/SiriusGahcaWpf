@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace SiriusGahca.LogicPerson
+namespace SiriusGahca.PersonSerialize
 {
 	public class Person
 	{

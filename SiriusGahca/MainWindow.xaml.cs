@@ -1,5 +1,5 @@
-﻿using SiriusGahca.Forms;
-using SiriusGahca.LogicPerson;
+﻿using SiriusGahca.WindowTemplate;
+using SiriusGahca.PersonSerialize;
 using SiriusGahca.UI_Elements;
 using System.IO;
 using System.Windows;
@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using SiriusGahca.CaseSerialize;
 
 namespace SiriusGahca
 {
@@ -15,31 +16,28 @@ namespace SiriusGahca
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-
-		private PersonDeserializer personDeserializer;
-		private WindowMainMenu mainMenu;
+		private readonly CaseDeserialize caseDeserialize = new CaseDeserialize();
+		private readonly PersonDeserializer personDeserializer = new PersonDeserializer();
+		private WindowMenu mainMenu;
 		private WindowCase windowCase;
-		private Random random;
-		private CancellationTokenSource cts;
+		private Random? random;
+		private CancellationTokenSource? cts;
 
 		public MainWindow()
 		{
-			personDeserializer = new PersonDeserializer();
-
 			InitializeComponent();
 
+			mainMenu = new WindowMenu(mainSpace, this, caseDeserialize);
 			windowCase = new WindowCase(mainSpace, this, personDeserializer);
-			mainMenu = new WindowMainMenu(mainSpace, this);
-
-			WindowState = WindowState.Maximized;
 		}
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
 			Icon = new BitmapImage(new Uri(Path.Combine("DataSirius", "ico.png"), UriKind.Relative));
 			mainSpace.Background = new ImageBrush(new BitmapImage(new Uri(@"DataSirius/Sirius_tac.png", UriKind.Relative)));
-			mainMenu.Deserialize(Path.Combine("DataSirius", "Case.xml"));
+			caseDeserialize.Deserialize(Path.Combine("DataSirius", "Case.xml"));
 			mainMenu.Create();
+			windowCase.Create();
 		}
 
 		public async void YouSpinMe(object sender, Spin spin)
@@ -56,7 +54,7 @@ namespace SiriusGahca
 					numChange = random.Next(1, 101);
 					foreach (Person person in personDeserializer.Person)
 					{
-						if (numChange >= person.Min && numChange <= person.Max)
+						if (numChange >= person.Min && numChange <= person.Max && !cts.IsCancellationRequested)
 						{
 							spin.Dispatcher.Invoke(() =>
 							{
@@ -83,16 +81,14 @@ namespace SiriusGahca
 		{
 			if(cts != null) { cts.Cancel(); }
 			mainSpace.Children.Clear();
-			window.SizeChanged -= ReloadGUI;
-			mainMenu.Create();
+			mainMenu.ReturnWindow();
 		}
 
 		public void CaseChoose(object sender, MouseButtonEventArgs e)
 		{
 			mainSpace.Children.Clear();
-			SizeChanged += ReloadGUI;
 			personDeserializer.Deserialize(((CasePeresent)sender).Tag.ToString());
-			windowCase.Create();
+			windowCase.ReturnWindow();
 		}
 
 	}
