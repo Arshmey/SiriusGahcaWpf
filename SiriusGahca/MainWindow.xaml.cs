@@ -1,95 +1,121 @@
 ﻿using SiriusGahca.WindowTemplate;
-using SiriusGahca.PersonSerialize;
 using SiriusGahca.UI_Elements;
 using System.IO;
+using System.Globalization;
+using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using SiriusGahca.CaseSerialize;
 
 namespace SiriusGahca
 {
-	/// <summary>
-	/// Interaction logic for MainWindow.xaml
-	/// </summary>
-	public partial class MainWindow : Window
-	{
-		private readonly CaseDeserialize caseDeserialize = new CaseDeserialize();
-		private readonly PersonDeserializer personDeserializer = new PersonDeserializer();
-		private WindowMenu mainMenu;
-		private WindowCase windowCase;
-		private Random? random;
-		private CancellationTokenSource? cts;
+    public class ImageConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value != null)
+            {
+                ImageSourceConverter converter = new ImageSourceConverter();
+                return converter.ConvertFrom($"pack://siteoforigin:,,,/{value}");
+            }
+            return value;
+        }
 
-		public MainWindow()
-		{
-			InitializeComponent();
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
 
-			mainMenu = new WindowMenu(mainSpace, this, caseDeserialize);
-			windowCase = new WindowCase(mainSpace, this, personDeserializer);
-		}
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
+    {
+        public ObservableCollection<Case> Cases { get; private set; }
 
-		private void Window_Loaded(object sender, RoutedEventArgs e)
-		{
-			Icon = new BitmapImage(new Uri(Path.Combine("DataSirius", "ico.png"), UriKind.Relative));
-			mainSpace.Background = new ImageBrush(new BitmapImage(new Uri(@"DataSirius/Sirius_tac.png", UriKind.Relative)));
-			caseDeserialize.Deserialize(Path.Combine("DataSirius", "Case.xml"));
-			mainMenu.Create();
-			windowCase.Create();
-		}
+        public MainWindow()
+        {
+            InitializeComponent();
+            DataContext = this;
 
-		public async void YouSpinMe(object sender, Spin spin)
-		{
-			int numChange;
-			int spineCount = 0;
-			random = new Random();
-			cts = new CancellationTokenSource();
-			((Button)sender).IsEnabled = false;
-			await Task.Factory.StartNew(() =>
-			{
-				while (!cts.IsCancellationRequested && spineCount < 35)
-				{
-					numChange = random.Next(1, 101);
-					foreach (Person person in personDeserializer.Person)
-					{
-						if (numChange >= person.Min && numChange <= person.Max && !cts.IsCancellationRequested)
-						{
-							spin.Dispatcher.Invoke(() =>
-							{
-								spin.ImagePerson = new BitmapImage(new Uri(Path.Combine(Directory.GetCurrentDirectory(), person.IconPerson),
-									UriKind.Absolute));
-								spin.NamePerson = $"Имя: {person.Name}";
-							});
-							break;
-						}
-					}
-					Thread.Sleep(100);
-					spineCount++;
-				}
-			}, cts.Token);
-			((Button)sender).IsEnabled = true;
-		}
+            Cases = new ObservableCollection<Case>();
 
-		private void ReloadGUI(object sender, SizeChangedEventArgs e)
-		{
-			windowCase.ResetResolution();
-		}
+            windowCase = new WindowCase(mainSpace, this);
+        }
 
-		public void CaseChooser(object sender, MouseButtonEventArgs e)
-		{
-			if(cts != null) { cts.Cancel(); }
-			mainSpace.Children.Clear();
-			mainMenu.ReturnWindow();
-		}
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            foreach (Case c in Case.Deserialize(Path.Combine("DataSirius", "Case.xml")))
+            {
+                Cases.Add(c);
+            }
+            //windowCase.Create();
+        }
 
-		public void CaseChoose(object sender, MouseButtonEventArgs e)
-		{
-			mainSpace.Children.Clear();
-			personDeserializer.Deserialize(((CasePeresent)sender).Tag.ToString());
-			windowCase.ReturnWindow();
-		}
+        public void CaseChoose(object sender, MouseButtonEventArgs e)
+        {
+            string? tag = "";
+            if (!string.IsNullOrEmpty(tag))
+            {
+                mainSpace.Children.Clear();
+                //persons = Person.Deserialize(tag);
+                windowCase.ReturnWindow();
+            }
+        }
 
-	}
+
+
+
+        public ObservableCollection<Person> Persons { get; private set; }
+        private CancellationTokenSource? cts;
+        public void CaseChooser(object sender, MouseButtonEventArgs e)
+        {
+            cts?.Cancel();
+            mainSpace.Children.Clear();
+        }
+        public async void YouSpinMe(object sender, Spin spin)
+        {
+            int numChange;
+            int spineCount = 0;
+            Random random = new Random();
+            cts = new CancellationTokenSource();
+            ((Button)sender).IsEnabled = false;
+            await Task.Factory.StartNew(() =>
+            {
+                while (!cts.IsCancellationRequested && spineCount < 35)
+                {
+                    numChange = random.Next(1, 101);
+                    foreach (Person person in persons)
+                    {
+                        if (numChange >= person.Min && numChange <= person.Max && !cts.IsCancellationRequested)
+                        {
+                            spin.Dispatcher.Invoke(() =>
+                            {
+                                spin.ImagePerson = new BitmapImage(new Uri(Path.Combine(Directory.GetCurrentDirectory(), person.IconPerson),
+                                    UriKind.Absolute));
+                                spin.NamePerson = $"Имя: {person.Name}";
+                            });
+                            break;
+                        }
+                        else if (cts.IsCancellationRequested) { break; }
+                    }
+                    spineCount++;
+                    Thread.Sleep(100);
+                }
+            }, cts.Token);
+            ((Button)sender).IsEnabled = true;
+        }
+
+
+
+        private readonly WindowCase windowCase;
+        private void ReloadGUI(object sender, SizeChangedEventArgs e)
+        {
+            windowCase.ResetResolution();
+        }
+    }
 }
