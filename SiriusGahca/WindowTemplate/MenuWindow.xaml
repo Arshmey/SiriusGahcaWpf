@@ -5,8 +5,9 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:SiriusGahca.WindowTemplate"
       xmlns:engine="clr-namespace:SiriusGahca"
-      mc:Ignorable="d" 
-      Height="704" Width="1280" Initialized="Page_Initialized">
+      mc:Ignorable="d"
+      Name="MenuWindowPage"
+      Height="704" Width="1280" Initialized="OnInitialized">
     
     <Page.Resources>
         <engine:MainWindow x:Key="MainWindow"/>
@@ -15,13 +16,7 @@
 
 
     <Grid>
-        <ListBox Name="MainListBox" VerticalAlignment="Top" ItemsSource="{Binding Cases, Mode=OneWay}">
-            <ListBox.Background>
-                <SolidColorBrush></SolidColorBrush>
-            </ListBox.Background>
-            <ListBox.BorderBrush>
-                <SolidColorBrush></SolidColorBrush>
-            </ListBox.BorderBrush>
+        <ListBox BorderBrush="Transparent" Background="Transparent" VerticalAlignment="Top" ItemsSource="{Binding Cases, Mode=OneWay}">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel IsItemsHost="True" />
@@ -34,10 +29,16 @@
             </ListBox.ItemContainerStyle>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Vertical" PreviewMouseDown="StackPanel_PreviewMouseDown" Tag="{Binding Tag}" Background="Transparent">
-                        <Image Source="{Binding IconPerson, Converter={StaticResource ImageConverter}}" Height="128" Width="128"/>
-                        <Label Content="{Binding Name}" Foreground="#FFDCE80D" HorizontalAlignment="Center" FontSize="14" FontFamily="Arial"  FontStretch="Normal" FontWeight="Bold"/>
-                    </StackPanel>
+                    <Button Command="{Binding ElementName=MenuWindowPage, Path=CaseSelectedCommand}" CommandParameter="{Binding}">
+                        <Button.Template>
+                            <ControlTemplate>
+                                <StackPanel Orientation="Vertical" Background="Transparent">
+                                    <Image Source="{Binding IconPerson, Converter={StaticResource ImageConverter}}" Height="128" Width="128"/>
+                                    <Label Content="{Binding Name}" Foreground="#FFDCE80D" HorizontalAlignment="Center" FontSize="14" FontFamily="Arial"  FontStretch="Normal" FontWeight="Bold"/>
+                                </StackPanel>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

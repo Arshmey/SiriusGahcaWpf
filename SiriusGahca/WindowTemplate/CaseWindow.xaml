@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:SiriusGahca.WindowTemplate"
         xmlns:engine="clr-namespace:SiriusGahca"
         mc:Ignorable="d"
-        Height="704" Width="1280" Initialized="InitializedWindow">
+        Height="704" Width="1280" Initialized="OnInitialized">
     <Page.Resources>
         <engine:ImageConverter x:Key="ImageConverter"/>
     </Page.Resources>
@@ -50,7 +50,7 @@
             <Label x:Name="personName" Content="Имя: Nan" Foreground="#FFDCE80D" FontSize="14" FontFamily="Arial" FontStretch="Normal" FontWeight="Bold" Height="32" HorizontalContentAlignment="Center"/>
             <Button Content="Крутить" Height="32" Width="128" Click="YouSpinMe"/>
         </StackPanel>
-        <Label HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="32" PreviewMouseUp="CaseChooser">
+        <Label HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="32" PreviewMouseUp="OnBackButtonClick">
             <Label.Background>
                 <SolidColorBrush Color="#FFDCE80D"/>
             </Label.Background>

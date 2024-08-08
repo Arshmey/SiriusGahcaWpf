@@ -1,44 +1,38 @@
-﻿using System.Globalization;
-using System.Windows;
-using System.Windows.Data;
-using System.Windows.Media;
+﻿using System.Windows;
+using SiriusGahca.WindowTemplate;
 
 namespace SiriusGahca
 {
-
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        MenuWindow _menu;
 
-		public MainWindow()
+        public MainWindow()
         {
             InitializeComponent();
+
+            _menu = new MenuWindow();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-			new MVVM(this).Run();
-		}
+            _menu.CaseSelected += OnCaseSelected;
+            Content = _menu;
+        }
 
-	}
+        private void OnCaseSelected(Case selected)
+        {
+            CaseWindow caseWindow = new CaseWindow(selected);
+            caseWindow.BackButtonPressed += OnBackButtonPressed;
+            Content = caseWindow;
+        }
 
-	public class ImageConverter : IValueConverter
-	{
-		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-		{
-			if (value != null)
-			{
-				ImageSourceConverter converter = new ImageSourceConverter();
-				return converter.ConvertFrom($"pack://siteoforigin:,,,/{value}");
-			}
-			return value;
-		}
-
-		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-		{
-			throw new NotSupportedException();
-		}
-	}
+        private void OnBackButtonPressed()
+        {
+            Content = _menu;
+        }
+    }
 }

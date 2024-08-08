@@ -1,6 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using System.IO;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -11,33 +10,47 @@ namespace SiriusGahca.WindowTemplate
     /// </summary>
     public partial class MenuWindow : Page
     {
+        private RelayCommand? _relayCommand;
 
-		private Action _case;
-		public ObservableCollection<Case> Cases { get; private set; }
-		public string? DataPerson { get; private set; }
+        public ObservableCollection<Case> Cases { get; private set; }
 
-		public MenuWindow(Action _case)
+        public ICommand CaseSelectedCommand
         {
-			this._case = _case;
+            get
+            {
+                if (_relayCommand == null)
+                {
+                    _relayCommand = new RelayCommand(OnCaseSelected);
+                }
+                return _relayCommand;
+            }
+        }
 
-			Cases = new ObservableCollection<Case>();
+        public event Action<Case>? CaseSelected;
 
-			InitializeComponent();
-		}
+        public MenuWindow()
+        {
+            Cases = new ObservableCollection<Case>();
 
-		private void Page_Initialized(object sender, EventArgs e)
-		{
-			foreach (Case _case in Case.Deserialize(Path.Combine("DataSirius", "Case.xml")))
-			{
-				Cases.Add(_case);
-			}
-		}
+            InitializeComponent();
 
-		private void StackPanel_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-		{
-			StackPanel stackPanel = sender as StackPanel ?? throw new Exception();
-			DataPerson = stackPanel.Tag.ToString();
-			_case.Invoke();
-		}
-	}
+            DataContext = this;
+        }
+
+        private void OnInitialized(object sender, EventArgs e)
+        {
+            foreach (Case c in Case.Deserialize(Path.Combine("DataSirius", "Case.xml")))
+            {
+                Cases.Add(c);
+            }
+        }
+
+        private void OnCaseSelected(Case? selected)
+        {
+            if (selected != null)
+            {
+                CaseSelected?.Invoke(selected);
+            }
+        }
+    }
 }
