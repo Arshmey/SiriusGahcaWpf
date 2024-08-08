@@ -1,0 +1,45 @@
+﻿<Page x:Class="SiriusGahca.WindowTemplate.MenuWindow"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:SiriusGahca.WindowTemplate"
+      xmlns:engine="clr-namespace:SiriusGahca"
+      mc:Ignorable="d" 
+      Height="704" Width="1280" Initialized="Page_Initialized">
+    
+    <Page.Resources>
+        <engine:MainWindow x:Key="MainWindow"/>
+        <engine:ImageConverter x:Key="ImageConverter"/>
+    </Page.Resources>
+
+
+    <Grid>
+        <ListBox Name="MainListBox" VerticalAlignment="Top" ItemsSource="{Binding Cases, Mode=OneWay}">
+            <ListBox.Background>
+                <SolidColorBrush></SolidColorBrush>
+            </ListBox.Background>
+            <ListBox.BorderBrush>
+                <SolidColorBrush></SolidColorBrush>
+            </ListBox.BorderBrush>
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel IsItemsHost="True" />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Margin" Value="35,0,30,0"/>
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Vertical" PreviewMouseDown="StackPanel_PreviewMouseDown" Tag="{Binding Tag}" Background="Transparent">
+                        <Image Source="{Binding IconPerson, Converter={StaticResource ImageConverter}}" Height="128" Width="128"/>
+                        <Label Content="{Binding Name}" Foreground="#FFDCE80D" HorizontalAlignment="Center" FontSize="14" FontFamily="Arial"  FontStretch="Normal" FontWeight="Bold"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</Page>

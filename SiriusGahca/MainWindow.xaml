@@ -4,8 +4,18 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SiriusGahca"
-        xmlns:UI_Elements="clr-namespace:SiriusGahca.UI_Elements" x:Name="window" x:Class="SiriusGahca.MainWindow"
+        x:Name="window" x:Class="SiriusGahca.MainWindow"
         mc:Ignorable="d"
-        Title="SiriusRPG Gacha" Height="720" Width="1280" Loaded="Window_Loaded" FontSize="14" SizeChanged="ReloadGUI">
+        Title="SiriusRPG Gacha" Height="720" Width="1280" Loaded="Window_Loaded" FontSize="14">
+    <Window.Background>
+        <ImageBrush ImageSource="pack://siteoforigin:,,,/DataSirius/Sirius_tac.png"/>
+    </Window.Background>
+    <Window.Icon>
+        <BitmapImage UriSource="pack://siteoforigin:,,,/DataSirius/ico.png"/>
+    </Window.Icon>
+    <Window.Resources>
+        <local:ImageConverter x:Key="ImageConverter"/>
+    </Window.Resources>
+
     <Grid x:Name="mainSpace"/>
 </Window>

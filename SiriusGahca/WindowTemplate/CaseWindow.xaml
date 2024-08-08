@@ -1,0 +1,59 @@
+﻿<Page   x:Class="SiriusGahca.WindowTemplate.CaseWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:SiriusGahca.WindowTemplate"
+        xmlns:engine="clr-namespace:SiriusGahca"
+        mc:Ignorable="d"
+        Height="704" Width="1280" Initialized="InitializedWindow">
+    <Page.Resources>
+        <engine:ImageConverter x:Key="ImageConverter"/>
+    </Page.Resources>
+
+    <Grid>
+        <ListBox x:Name="sideBar" ItemsSource="{Binding Persons, Mode=OneWay}" HorizontalAlignment="Right">
+            <ListBox.Background>
+                <SolidColorBrush/>
+            </ListBox.Background>
+
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Margin" Value="0,4,0,0"/>
+                </Style>
+            </ListBox.ItemContainerStyle>
+
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Vertical" />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{Binding IconPerson, Converter={StaticResource ImageConverter}}" Height="128" Width="128" />
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Top">
+                            <Label ContentStringFormat="Имя: {0}" Content="{Binding Name}" Foreground="#FFDCE80D" HorizontalAlignment="Left" FontSize="14" FontFamily="Arial" FontStretch="Normal" FontWeight="Bold"/>
+                            <Label ContentStringFormat="Редкость: {0}" Content="{Binding Rate}" Foreground="#FFDCE80D" HorizontalAlignment="Left" FontSize="14" FontFamily="Arial" FontStretch="Normal" FontWeight="Bold"/>
+                        </StackPanel>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <StackPanel Margin="510,90,510,0" VerticalAlignment="Top">
+            <Image x:Name="personImage" Width="128" Height="128">
+                <Image.Source>
+                    <BitmapImage UriSource="pack://siteoforigin:,,,/DataSirius/ico.png"/>
+                </Image.Source>
+            </Image>
+            <Label x:Name="personName" Content="Имя: Nan" Foreground="#FFDCE80D" FontSize="14" FontFamily="Arial" FontStretch="Normal" FontWeight="Bold" Height="32" HorizontalContentAlignment="Center"/>
+            <Button Content="Крутить" Height="32" Width="128" Click="YouSpinMe"/>
+        </StackPanel>
+        <Label HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="32" PreviewMouseUp="CaseChooser">
+            <Label.Background>
+                <SolidColorBrush Color="#FFDCE80D"/>
+            </Label.Background>
+        </Label>
+    </Grid>
+</Page>
